@@ -1,0 +1,4 @@
+Conception :
+Faire une table de connectivité
+Possibilité de manip info
+Faire un motif et tester avec
