@@ -163,6 +163,58 @@ def translate_lattice(lattice, lattice_connectivity):
     
     translated_cell = np.array(translated_cell)
     return translated_cell, lattice_connectivity
+
+def plan_equation(point1, point2, point3):
+    """Return the equation of the plane defined by 3 points."""
+    
+    #print("point1", point1)
+    #print("point2", point2)
+    #print("point3", point3)
+    
+    x1, y1, z1 = point1
+    x2, y2, z2 = point2
+    x3, y3, z3 = point3
+    
+    a = (y2-y1)*(z3-z1) - (z2-z1)*(y3-y1)
+    b = (z2-z1)*(x3-x1) - (x2-x1)*(z3-z1)
+    c = (x2-x1)*(y3-y1) - (y2-y1)*(x3-x1)
+    d = -(a*x1 + b*y1 + c*z1)
+    
+    return a, b, c, d
+
+def which_side(point, plane):
+    """Return the side of the plane on which the point is."""
+    
+    a, b, c, d = plane
+    x, y, z = point
+    
+    result = a*x + b*y + c*z + d
+    
+    if result > 0:
+        return 1
+    elif result < 0:
+        return -1
+    else:
+        return 0
+    
+def cut_lattice(lattice, lattice_connectivity, plane, side):
+    """Cut the lattice with the given plane.""" # adjust this with a hash table
+    cut_lattice = []
+    cut_connectivity = []
+    
+    for i, point in enumerate(lattice):
+        if which_side(point, plane) == side:
+            cut_lattice.append(point)
+    
+    for i, connection in enumerate(lattice_connectivity):
+        if which_side(lattice[connection[0]], plane) == side and which_side(lattice[connection[1]], plane) == side:
+            cut_connectivity.append(connection)
+    
+    return np.array(cut_lattice), cut_connectivity
+    
+
+def cut_lattice():
+    pass
     
 #---------------------------------------------
 if __name__ =='__main__':
