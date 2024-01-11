@@ -69,7 +69,10 @@ def save_to_DF(coordinates, connectivity, width):
     
     return coordinates_DF, connectivity_DF, radius_DF
     
-
+def assign_points_order(lattice, lattice_connectivity):
+    ordering_hash = {i : point for i, point in enumerate(lattice)}
+    # to complete
+    
 def plot_lattice(lattice, lattice_connectivity):
     """Plot the lattice."""
     
@@ -211,21 +214,46 @@ def cut_lattice(lattice, lattice_connectivity, plane, side):
             cut_connectivity.append(connection)
     
     return np.array(cut_lattice), cut_connectivity
-    
 
-def cut_lattice():
-    pass
+# for the lattice points I should add a
+#--------------------------------------------
+def choose_structure(name_of_structure):
+    coordinates = os.path.join(name_of_structure, 'coordonnees_motif_' + name_of_structure + '.csv')
+    connectivity = os.path.join(name_of_structure, 'connectivite_motif_' + name_of_structure + '.csv')
+    output_name = 'generated_' + name_of_structure
     
+    return coordinates, connectivity, output_name
+
+def calculate_density(lattice, lattice_connectivity, width, constant):
+    """Calculate the density of the lattice."""
+    number_of_struts = len(lattice_connectivity)
+    filled_volume = number_of_struts * np.pi * (width**2) * constant
+    global_volume = (number_of_struts*3)**3
+    density = filled_volume / global_volume
+    
+    return density
+
 #---------------------------------------------
 if __name__ =='__main__':
     
-    coordinates = 'CFC\coordonnees_motif_CFC.csv'
-    connectivity = 'CFC\connectivite_motif_CFC.csv'
+    # G7R
+    coordinates_G7R = 'G7R\coordonnees_motif_G7R.csv'
+    connectivity_G7R = 'G7R\connectivite_motif_G7R.csv'
+    # CFC
+    coordinates_CFC = 'CFC\coordonnees_motif_CFC.csv'
+    connectivity_CFC = 'CFC\connectivite_motif_CFC.csv'
+    # Octettruss
+    coordinates_Octettruss = 'Octettruss\coordonnees_motif_Octettruss.csv'
+    connectivity_Octettruss = 'Octettruss\connectivite_motif_Octettruss.csv'
+    
+    coordinates, connectivity, name = choose_structure('CFC')
+    #coordinates = coordinates_Octettruss
+    #connectivity = connectivity_Octettruss
     constant = 6
     width = 0.5
-    n = 2
+    n = 3
     nx, ny, nz = n, n, n  # Number of unit cells in each direction
-    name = 'test_G7R'
+    #name = 'Octettruss'
     destination = ''
     
     axis = [1, 1, 1]
@@ -239,6 +267,15 @@ if __name__ =='__main__':
     
     atoms, connectivity = rotate_unit_cell(lattice, lattice_connectivity, axis, angle) #rotate the generated lattice
     coordinates_DF, connectivity_DF, radius_DF = save_to_DF(atoms, connectivity, width)
-    plot_lattice(atoms, connectivity)
+    number_of_struts = len(connectivity)
+    vol = number_of_struts*np.pi*(width**2)*constant
+    vol_glob = ((constant*n)**3)
+    density = vol/vol_glob
+    print(name)
+    print("number_of_struts", number_of_struts)
+    print("vol", vol)
+    print("vol_glob", vol_glob)
+    print("density", density)
+    #plot_lattice(atoms, connectivity) <---- this is the one to plot
     #plot_lattice(lattice, lattice_connectivity)
-    export_lattice(name, destination, coordinates_DF, connectivity_DF, radius_DF)
+    #export_lattice(name, destination, coordinates_DF, connectivity_DF, radius_DF) <---- this is the one to export
