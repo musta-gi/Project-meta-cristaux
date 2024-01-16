@@ -246,7 +246,7 @@ if __name__ =='__main__':
     coordinates_Octettruss = 'Octettruss\coordonnees_motif_Octettruss.csv'
     connectivity_Octettruss = 'Octettruss\connectivite_motif_Octettruss.csv'
     
-    coordinates, connectivity, name = choose_structure('CFC')
+    coordinates, connectivity, name = choose_structure('G7R')
     #coordinates = coordinates_Octettruss
     #connectivity = connectivity_Octettruss
     constant = 6
@@ -257,7 +257,7 @@ if __name__ =='__main__':
     destination = ''
     
     axis = [1, 1, 1]
-    angle = np.pi/3
+    angle = 0 #np.pi/3
     
     cells, beams = extract_data(coordinates, connectivity)
     atoms, connectivity = generate_unit_cell(cells, beams, constant)
@@ -276,6 +276,6 @@ if __name__ =='__main__':
     print("vol", vol)
     print("vol_glob", vol_glob)
     print("density", density)
-    #plot_lattice(atoms, connectivity) <---- this is the one to plot
+    plot_lattice(atoms, connectivity) #<---- this is the one to plot
     #plot_lattice(lattice, lattice_connectivity)
-    #export_lattice(name, destination, coordinates_DF, connectivity_DF, radius_DF) <---- this is the one to export
+    export_lattice(name, destination, coordinates_DF, connectivity_DF, radius_DF) #<---- this is the one to export
