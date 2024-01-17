@@ -11,6 +11,8 @@ def extract_data(coordinates, connectivity):
     beams_table = pd.read_csv(connectivity, header=None)
     cells = np.array(cells_table)
     beams = [tuple(x) for x in beams_table.values]
+    print("cells", cells)
+    print("beams", beams)
     return cells, beams
 
 
@@ -246,18 +248,18 @@ if __name__ =='__main__':
     coordinates_Octettruss = 'Octettruss\coordonnees_motif_Octettruss.csv'
     connectivity_Octettruss = 'Octettruss\connectivite_motif_Octettruss.csv'
     
-    coordinates, connectivity, name = choose_structure('G7R')
+    coordinates, connectivity, name = choose_structure('CFC')
     #coordinates = coordinates_Octettruss
     #connectivity = connectivity_Octettruss
     constant = 6
     width = 0.5
     n = 3
-    nx, ny, nz = n, n, n  # Number of unit cells in each direction
+    nx, ny, nz = 2, 4, 4 #n, n, n ## # Number of unit cells in each direction
     #name = 'Octettruss'
     destination = ''
     
-    axis = [1, 1, 1]
-    angle = 0 #np.pi/3
+    axis = [1, 0, 0]
+    angle = np.pi/3
     
     cells, beams = extract_data(coordinates, connectivity)
     atoms, connectivity = generate_unit_cell(cells, beams, constant)
@@ -276,6 +278,7 @@ if __name__ =='__main__':
     print("vol", vol)
     print("vol_glob", vol_glob)
     print("density", density)
-    plot_lattice(atoms, connectivity) #<---- this is the one to plot
+    #plot_lattice(atoms, connectivity) #<---- this is the one to plot
     #plot_lattice(lattice, lattice_connectivity)
     export_lattice(name, destination, coordinates_DF, connectivity_DF, radius_DF) #<---- this is the one to export
+    
