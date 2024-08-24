@@ -3,14 +3,14 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import pandas as pd
 import os
-import logging
 
-logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 #---------------------------------------------
 def extract_data(coordinates, connectivity):
     """Extract data from files."""
-    cells_table = pd.read_csv(coordinates, header=None)
-    beams_table = pd.read_csv(connectivity, header=None)
+    cells_table = pd.read_excel(coordinates,sheet_name= "Coordonnées" ,header=None)
+    #cells_table = pd.read_csv(coordinates, header=None)
+    beams_table = pd.read_excel(connectivity,sheet_name= "Connectivité" ,header=None)
+    #beams_table = pd.read_csv(connectivity, header=None)
     cells = np.array(cells_table)
     beams = [tuple(x) for x in beams_table.values]
     print("cells", cells)
@@ -250,18 +250,18 @@ if __name__ =='__main__':
     coordinates_Octettruss = 'Octettruss\coordonnees_motif_Octettruss.csv'
     connectivity_Octettruss = 'Octettruss\connectivite_motif_Octettruss.csv'
     
-    coordinates, connectivity, name = choose_structure('CFC')
+    coordinates, connectivity, name = 'Generation_lattices.xlsx', 'Generation_lattices.xlsx', 'CFC'#choose_structure('CFC')
     #coordinates = coordinates_Octettruss
     #connectivity = connectivity_Octettruss
     constant = 6
     width = 0.5
     n = 3
-    nx, ny, nz = 2, 4, 4 #n, n, n ## # Number of unit cells in each direction
+    nx, ny, nz = 1, 2, 3#n, n, n  # Number of unit cells in each direction
     #name = 'Octettruss'
     destination = ''
     
-    axis = [1, 0, 0]
-    angle = np.pi/3
+    axis = [1, 1, 1]
+    angle = np.pi/6
     
     cells, beams = extract_data(coordinates, connectivity)
     atoms, connectivity = generate_unit_cell(cells, beams, constant)
@@ -269,7 +269,7 @@ if __name__ =='__main__':
     
     lattice, lattice_connectivity = duplicate_unit_cell(atoms, connectivity, constant, nx, ny, nz)
     
-    atoms, connectivity = rotate_unit_cell(lattice, lattice_connectivity, axis, angle) #rotate the generated lattice
+    atoms, connectivity = lattice, lattice_connectivity #rotate_unit_cell(lattice, lattice_connectivity, axis, angle) #rotate the generated lattice
     coordinates_DF, connectivity_DF, radius_DF = save_to_DF(atoms, connectivity, width)
     number_of_struts = len(connectivity)
     vol = number_of_struts*np.pi*(width**2)*constant
